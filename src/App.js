@@ -1,6 +1,6 @@
 import "./styles.scss";
 import { useEffect, useState } from "react";
-import { assetsList } from "../images/assets/index.js";
+import { assetsList } from "./images/assets/index.js";
 
 export default function App() {
   const [tokenPos, setTokenPos] = useState({
