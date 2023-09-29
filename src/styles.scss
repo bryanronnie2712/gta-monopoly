@@ -1,0 +1,257 @@
+.container {
+  background-size: cover;
+  object-fit: contain;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
+  grid-template-rows: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
+  
+
+  grid-auto-flow: row;
+  grid-template-areas:
+    "a b c d e f g h i j k"
+    "an . . . . . . . . . l"
+    "am . . . . . . . . . m"
+    "al . . . . . . . . . n"
+    "ak . . . . . . . . . o"
+    "aj . . . . . . . . . p"
+    "ai . . . . . . . . . q"
+    "ah . . . . . . . . . r"
+    "ag . . . . . . . . . s"
+    "af . . . . . . . . . t"
+    "ae ad ac ab aa z y x w v u";
+}
+
+.a {
+  grid-area: a;
+  
+}
+
+.b {
+  grid-area: b;
+}
+
+.c {
+  grid-area: c;
+}
+
+.d {
+  grid-area: d;
+}
+
+.e {
+  grid-area: e;
+}
+
+.f {
+  grid-area: f;
+}
+
+.g {
+  grid-area: g;
+}
+
+.h {
+  grid-area: h;
+}
+
+.i {
+  grid-area: i;
+}
+
+.j {
+  grid-area: j;
+}
+
+.k {
+  grid-area: k;
+}
+
+.l {
+  grid-area: l;
+}
+
+.m {
+  grid-area: m;
+}
+
+.n {
+  grid-area: n;
+}
+
+.o {
+  grid-area: o;
+}
+
+.p {
+  grid-area: p;
+}
+
+.q {
+  grid-area: q;
+}
+
+.r {
+  grid-area: r;
+}
+
+.s {
+  grid-area: s;
+}
+
+.t {
+  grid-area: t;
+}
+
+.u {
+  grid-area: u;
+  background: url('https://th.bing.com/th/id/R.5622e0d0f28cb4bc14a90e230582393d?rik=ZT6bleQoD%2fjvfA&riu=http%3a%2f%2fgetdrawings.com%2fcliparts%2fmonopoly-clipart-23.jpg&ehk=S9xsVZYNrPVxCIzG4zBvulhJDkOe7tmgGuvkqIJM8rs%3d&risl=&pid=ImgRaw&r=0') black;
+  background-size: cover;
+}
+
+.v {
+  grid-area: v;
+}
+
+.w {
+  grid-area: w;
+}
+
+.x {
+  grid-area: x;
+  border:brown;
+}
+
+.y {
+  grid-area: y;
+}
+
+.z {
+  grid-area: z;
+}
+
+.aa {
+  grid-area: aa;
+}
+
+.ab {
+  grid-area: ab;
+}
+
+.ac {
+  grid-area: ac;
+}
+
+.ad {
+  grid-area: ad;
+}
+
+.ae {
+  grid-area: ae;
+  // background: url('../images/busted.jpg');
+}
+
+.af {
+  grid-area: af;
+}
+
+.ag {
+  grid-area: ag;
+}
+
+.ah {
+  grid-area: ah;
+}
+
+.ai {
+  grid-area: ai;
+}
+
+.aj {
+  grid-area: aj;
+}
+
+.ak {
+  grid-area: ak;
+}
+
+.al {
+  grid-area: al;
+}
+
+.am {
+  grid-area: am;
+}
+
+.an {
+  grid-area: an;
+}
+
+
+html,
+body,
+.container {
+  height: 100%;
+  margin: 0;
+  // background: linear-gradient(pink, rgb(139, 4, 117));
+}
+
+/* For presentation only, no need to copy the code below */
+
+.container * {
+  position: relative;
+  z-index: 1;  
+  border: 1px solid #eee;
+  &:hover{
+    background-blend-mode: 'darken';
+    border: 1px solid;
+    box-shadow: 0px 0px 5px black;
+    // transition: all 0.3s;
+  }
+}
+
+.container *:after {
+  // content: attr(class);
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+.token * {
+  position: absolute;
+  z-index: 100;
+  margin:-480px 0px 0 900px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: red;
+  transition: all .2s;
+
+  // &:hover{
+  //   background-blend-mode: none;
+  //   border: 1px solid;
+  //   box-shadow: 0px 0px 5px black;
+  // }
+}
+
+.player1Token{
+  background: radial-gradient(yellow,black);
+}
+.player2Token{
+  background: radial-gradient(red,blue);
+}
+.player3Token{
+  background: radial-gradient(green,gold);
+}
+.player4Token{
+  background: radial-gradient(orange,violet);
+}
+
+
+
