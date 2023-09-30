@@ -3,20 +3,27 @@ import { useEffect, useState } from "react";
 import { assetsList } from "./images/assets/index.js";
 
 export default function App() {
-  const [tokenPos, setTokenPos] = useState({
-    player1: { xPos: 30, yPos: 410 },
-    player2: { xPos: 30, yPos: 410 },
-    player3: { xPos: 30, yPos: 410 },
-    player4: { xPos: 30, yPos: 410 }
-  });
-  const [playerDetails, setPlayerDetails] = useState([
-    { pos: 0, assets: [] },
-    { pos: 0, assets: [] },
-    { pos: 0, assets: [] },
-    { pos: 0, assets: [] }
+  const [tokenPos, setTokenPos] = useState([
+    { id: 0, xPos: 30, yPos: 410 }, // player 1
+    { id: 1, xPos: 30, yPos: 410 }, // player 2
+    { id: 2, xPos: 30, yPos: 410 }, // player 3
+    { id: 3, xPos: 30, yPos: 410 }, // player 4
   ]);
+
+  const [playerDetails, setPlayerDetails] = useState([
+    { pos: 0, assets: [], money: 1500, active: false },
+    { pos: 0, assets: [], money: 1500, active: false },
+    { pos: 0, assets: [], money: 1500, active: false },
+    { pos: 0, assets: [], money: 1500, active: false },
+  ]);
+
   const [currentTurn, setCurrentTurn] = useState(0);
   const [trailCurrentTile, setTrailCurrentTile] = useState(0);
+  const [optionDetails, setOptionDetails] = useState({
+    buy: false,
+    sell: true,
+    endTurn: false,
+  });
   const [currentTile, setCurrentTile] = useState(
     <div>
       <img
@@ -25,7 +32,7 @@ export default function App() {
         height="100%"
         alt={assetsList[trailCurrentTile]}
       />
-    </div>
+    </div>,
   );
 
   useEffect(() => {
@@ -36,18 +43,18 @@ export default function App() {
         </span>
         <div
           style={{
-            transform: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].includes(trailCurrentTile)
+            transform: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(
+              trailCurrentTile,
+            )
               ? ""
-              : [10, 11, 12, 13, 14, 15, 16, 17, 18, 19].includes(
-                  trailCurrentTile
-                )
+              : [11, 12, 13, 14, 15, 16, 17, 18, 19].includes(trailCurrentTile)
               ? "rotate(-90deg)"
               : [20, 21, 22, 23, 24, 25, 26, 27, 28, 29].includes(
-                  trailCurrentTile
+                  trailCurrentTile,
                 )
               ? "rotate(180deg)"
               : "rotate(90deg)",
-            width: "200px"
+            width: "200px",
           }}
         >
           <img
@@ -57,7 +64,7 @@ export default function App() {
             alt={assetsList[trailCurrentTile]}
           />
         </div>
-      </div>
+      </div>,
     );
   }, [trailCurrentTile, currentTurn]);
 
@@ -103,9 +110,10 @@ export default function App() {
       { x: 30, y: 54 },
       { x: 30, y: 134 },
       { x: 30, y: 212 },
-      { x: 30, y: 298 }
+      { x: 30, y: 298 },
     ];
 
+    // this wierd-looking function is to move the player token step-by-step to the destination
     for (
       let i = playerDetails[playerNumber].pos + 1;
       i <= playerDetails[playerNumber].pos + diceVal;
@@ -113,21 +121,16 @@ export default function App() {
     ) {
       await new Promise((resolve) => {
         setTimeout(() => {
-          let playerTokenPosition = tokenPos[`player${playerNumber + 1}`];
+          let playerTokenPosition = tokenPos[playerNumber];
 
-          console.log(
-            "[playerDetails[playerNumber].pos",
-            playerDetails[playerNumber].pos
-          );
           playerTokenPosition.xPos +=
             assetPositions[playerDetails[playerNumber].pos].x;
           playerTokenPosition.yPos +=
             assetPositions[playerDetails[playerNumber].pos].y;
 
-          setTokenPos({
-            ...tokenPos,
-            [`player${playerNumber + 1}`]: playerTokenPosition
-          });
+          let tempTokenPos = [...tokenPos];
+          tempTokenPos[playerNumber] = playerTokenPosition;
+          setTokenPos(tempTokenPos);
 
           setTrailCurrentTile(i % 40);
 
@@ -136,23 +139,49 @@ export default function App() {
       });
     }
 
+    // Update the current player's new position
     let temp = playerDetails;
-    temp[playerNumber] = { pos: (temp[playerNumber].pos + diceVal) % 40 };
+    temp[playerNumber].pos = (temp[playerNumber].pos + diceVal) % 40;
     setPlayerDetails(temp);
+
+    // Display options like buy, upgrade properties, bla bla
+    displayOptions(playerNumber);
+
+    // switch to next player, if the current player clicks 'End turn'
+    if (optionDetails.endTurn) {
+      nextPlayerTurn();
+    }
   };
 
-  // console.log("playerDetails", playerDetails);
-  console.log(assetsList.length, currentTurn);
+  const displayOptions = (playerNumber) => {
+    if (assetsList[playerDetails[playerNumber].pos].type == "asset")
+      setOptionDetails({ ...optionDetails, buy: true });
+  };
 
   const rollDice = (playerNumber) => {
-    const diceVal = Math.floor(Math.random() * 12);
+    const diceVal = Math.floor(Math.random() * 12) + 1;
     handleTokenPos(playerNumber, diceVal);
-    console.log("diceVal", diceVal);
     // handleTokenPos(playerNumber, 1); // For testing
   };
 
   const nextPlayerTurn = () => {
     setCurrentTurn((currentTurn + 1) % 4);
+  };
+
+  console.log("playerDetails --> ", playerDetails);
+
+  const buyAsset = (playerNumber) => {
+    assetsList[playerDetails[playerNumber].pos].ownedBy = playerNumber;
+
+    const tempPlayerDetails = { ...playerDetails };
+    tempPlayerDetails[playerNumber].money -=
+      assetsList[playerDetails[playerNumber].pos].cost;
+    tempPlayerDetails[playerNumber].assets.push(
+      playerDetails[playerNumber].pos,
+    );
+    setPlayerDetails(tempPlayerDetails);
+
+    setOptionDetails({ ...optionDetails, buy: false });
   };
 
   return (
@@ -168,43 +197,21 @@ export default function App() {
         })}
       </div>
 
-      <div className="token"></div>
-
+      {/* Player Tokens */}
       <div className="token">
-        <div
-          className="player1Token"
-          style={{
-            transform: `translate(${tokenPos.player1.xPos}px,${tokenPos.player1.yPos}px)`
-          }}
-          // onClick={() => handleTokenPos(0)}
-        >
-          {/* {tokenPos.player1.xPos}px, {tokenPos.player1.yPos}px */}
-        </div>
-        <div
-          className="player2Token"
-          // onClick={() => handleTokenPos(1)}
-          style={{
-            transform: `translate(${tokenPos.player2.xPos}px,${tokenPos.player2.yPos}px)`
-          }}
-          pos={{ x: tokenPos.player2.xPos, y: tokenPos.player2.yPos }}
-        ></div>
-        <div
-          className="player3Token"
-          // onClick={() => handleTokenPos(2)}
-          style={{
-            transform: `translate(${tokenPos.player3.xPos}px,${tokenPos.player3.yPos}px)`
-          }}
-          pos={{ x: tokenPos.player3.xPos, y: tokenPos.player3.yPos }}
-        ></div>
-        <div
-          className="player4Token"
-          // onClick={() => handleTokenPos(3)}
-          style={{
-            transform: `translate(${tokenPos.player4.xPos}px,${tokenPos.player4.yPos}px)`
-          }}
-          pos={{ x: tokenPos.player4.xPos, y: tokenPos.player4.yPos }}
-        ></div>
+        {tokenPos.map((tp) => {
+          if (tp.id == currentTurn)
+            return (
+              <div
+                className={`player${tp.id}Token`}
+                style={{
+                  transform: `translate(${tp.xPos}px,${tp.yPos}px)`,
+                }}
+              ></div>
+            );
+        })}
       </div>
+      {/* ------------- */}
 
       <button
         style={{ position: "absolute", margin: "-475px 485px" }}
@@ -219,6 +226,17 @@ export default function App() {
       >
         NextPlayerTurn
       </button>
+
+      {optionDetails.buy ? (
+        <button
+          style={{ position: "absolute", margin: "-475px 545px" }}
+          onClick={() => buyAsset(currentTurn)}
+        >
+          Buy
+        </button>
+      ) : (
+        ""
+      )}
 
       {currentTile}
     </div>

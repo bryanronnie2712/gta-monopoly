@@ -4,7 +4,6 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
   grid-template-rows: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
-  
 
   grid-auto-flow: row;
   grid-template-areas:
@@ -23,7 +22,6 @@
 
 .a {
   grid-area: a;
-  
 }
 
 .b {
@@ -104,7 +102,8 @@
 
 .u {
   grid-area: u;
-  background: url('https://th.bing.com/th/id/R.5622e0d0f28cb4bc14a90e230582393d?rik=ZT6bleQoD%2fjvfA&riu=http%3a%2f%2fgetdrawings.com%2fcliparts%2fmonopoly-clipart-23.jpg&ehk=S9xsVZYNrPVxCIzG4zBvulhJDkOe7tmgGuvkqIJM8rs%3d&risl=&pid=ImgRaw&r=0') black;
+  background: url("https://th.bing.com/th/id/R.5622e0d0f28cb4bc14a90e230582393d?rik=ZT6bleQoD%2fjvfA&riu=http%3a%2f%2fgetdrawings.com%2fcliparts%2fmonopoly-clipart-23.jpg&ehk=S9xsVZYNrPVxCIzG4zBvulhJDkOe7tmgGuvkqIJM8rs%3d&risl=&pid=ImgRaw&r=0")
+    black;
   background-size: cover;
 }
 
@@ -118,7 +117,7 @@
 
 .x {
   grid-area: x;
-  border:brown;
+  border: brown;
 }
 
 .y {
@@ -186,7 +185,6 @@
   grid-area: an;
 }
 
-
 html,
 body,
 .container {
@@ -199,10 +197,10 @@ body,
 
 .container * {
   position: relative;
-  z-index: 1;  
+  z-index: 1;
   border: 1px solid #eee;
-  &:hover{
-    background-blend-mode: 'darken';
+  &:hover {
+    background-blend-mode: "darken";
     border: 1px solid;
     box-shadow: 0px 0px 5px black;
     // transition: all 0.3s;
@@ -221,17 +219,25 @@ body,
   justify-content: center;
 }
 
-
-
 .token * {
   position: absolute;
   z-index: 100;
-  margin:-480px 0px 0 900px;
+  margin: -480px 0px 0 900px;
   width: 15px;
   height: 15px;
   border-radius: 50%;
   background-color: red;
-  transition: all .2s;
+  transition: all 0.2s;
+
+  &::after {
+    border: 2px solid red;
+    width: 15px;
+    height: 15px;
+    display: block;
+    // padding: 2px;
+    z-index: 100;
+    // content: "+";
+  }
 
   // &:hover{
   //   background-blend-mode: none;
@@ -240,18 +246,15 @@ body,
   // }
 }
 
-.player1Token{
-  background: radial-gradient(yellow,black);
+.player1Token {
+  background: radial-gradient(yellow, black);
 }
-.player2Token{
-  background: radial-gradient(red,blue);
+.player2Token {
+  background: radial-gradient(red, blue);
 }
-.player3Token{
-  background: radial-gradient(green,gold);
+.player3Token {
+  background: radial-gradient(green, gold);
 }
-.player4Token{
-  background: radial-gradient(orange,violet);
+.player4Token {
+  background: radial-gradient(orange, violet);
 }
-
-
-
