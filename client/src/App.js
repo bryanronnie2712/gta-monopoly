@@ -1,8 +1,12 @@
 import "./styles.scss";
 import { useEffect, useState } from "react";
 import { assetsList } from "./images/assets/index.js";
+import io from "socket.io-client";
+
+const socket = io.connect("https://x6yjll-4000.csb.app");
 
 export default function App() {
+  const [room, setRoom] = useState("12345");
   const [tokenPos, setTokenPos] = useState([
     { id: 0, xPos: 30, yPos: 410 }, // player 1
     { id: 1, xPos: 30, yPos: 410 }, // player 2
@@ -184,6 +188,26 @@ export default function App() {
     setOptionDetails({ ...optionDetails, buy: false });
   };
 
+  // Socket.io------------------------
+  const sendMessage = () => {
+    socket.emit("send_msg", { playerDetails });
+  };
+
+  const updatePlayerDetailsSocket = () => {
+    socket.emit("send_msg", { playerDetails });
+  };
+
+  const joinRoom = () => {
+    socket.emit("join_room", room);
+  };
+
+  useEffect(() => {
+    socket.on("recieve", (playerDetailsFromSocket) => {
+      setPlayerDetails(playerDetailsFromSocket);
+    });
+  }, [socket]);
+  // ----------------------
+
   return (
     <div>
       <div className="container" style={{ height: "1000px", width: "1000px" }}>
@@ -213,31 +237,27 @@ export default function App() {
       </div>
       {/* ------------- */}
 
-      <button
-        style={{ position: "absolute", margin: "-475px 485px" }}
-        onClick={() => rollDice(currentTurn)}
+      <div
+        style={{
+          display: "flex",
+          position: "absolute",
+          margin: "-475px 485px",
+        }}
       >
-        Roll
-      </button>
+        <button onClick={joinRoom}>joinRoom</button>
 
-      <button
-        style={{ position: "absolute", margin: "-475px 545px" }}
-        onClick={nextPlayerTurn}
-      >
-        NextPlayerTurn
-      </button>
+        <button onClick={sendMessage}>Test Socket</button>
 
-      {optionDetails.buy ? (
-        <button
-          style={{ position: "absolute", margin: "-475px 545px" }}
-          onClick={() => buyAsset(currentTurn)}
-        >
-          Buy
-        </button>
-      ) : (
-        ""
-      )}
+        <button onClick={() => rollDice(currentTurn)}>Roll</button>
 
+        <button onClick={nextPlayerTurn}>NextPlayerTurn</button>
+
+        {optionDetails.buy ? (
+          <button onClick={() => buyAsset(currentTurn)}>Buy</button>
+        ) : (
+          ""
+        )}
+      </div>
       {currentTile}
     </div>
   );
