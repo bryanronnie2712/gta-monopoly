@@ -4,20 +4,25 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
   grid-template-rows: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
+  gap: none;
 
   grid-auto-flow: row;
   grid-template-areas:
     "a b c d e f g h i j k"
-    "an . . . . . . . . . l"
-    "am . . . . . . . . . m"
-    "al . . . . . . . . . n"
-    "ak . . . . . . . . . o"
-    "aj . . . . . . . . . p"
-    "ai . . . . . . . . . q"
-    "ah . . . . . . . . . r"
-    "ag . . . . . . . . . s"
-    "af . . . . . . . . . t"
+    "an ao ao ao ao ao ao ao ao ao l"
+    "am ao ao ao ao ao ao ao ao ao m"
+    "al ao ao ao ao ao ao ao ao ao n"
+    "ak ao ao ao ao ao ao ao ao ao o"
+    "aj ao ao ao ao ao ao ao ao ao p"
+    "ai ao ao ao ao ao ao ao ao ao q"
+    "ah ao ao ao ao ao ao ao ao ao r"
+    "ag ao ao ao ao ao ao ao ao ao s"
+    "af ao ao ao ao ao ao ao ao ao t"
     "ae ad ac ab aa z y x w v u";
+}
+
+.ao {
+  grid-area: ao;
 }
 
 .a {
@@ -102,9 +107,6 @@
 
 .u {
   grid-area: u;
-  background: url("https://th.bing.com/th/id/R.5622e0d0f28cb4bc14a90e230582393d?rik=ZT6bleQoD%2fjvfA&riu=http%3a%2f%2fgetdrawings.com%2fcliparts%2fmonopoly-clipart-23.jpg&ehk=S9xsVZYNrPVxCIzG4zBvulhJDkOe7tmgGuvkqIJM8rs%3d&risl=&pid=ImgRaw&r=0")
-    black;
-  background-size: cover;
 }
 
 .v {
@@ -193,15 +195,13 @@ body,
   // background: linear-gradient(pink, rgb(139, 4, 117));
 }
 
-/* For presentation only, no need to copy the code below */
-
 .container * {
   position: relative;
   z-index: 1;
-  border: 1px solid #eee;
+  border: 0.5px solid #eee;
   &:hover {
     background-blend-mode: "darken";
-    border: 1px solid;
+    // border: 1px solid;
     box-shadow: 0px 0px 5px black;
     // transition: all 0.3s;
   }
@@ -219,42 +219,29 @@ body,
   justify-content: center;
 }
 
-.token * {
-  position: absolute;
+.token {
+  position: relative;
   z-index: 100;
-  margin: -480px 0px 0 900px;
+  margin: 0;
   width: 15px;
   height: 15px;
   border-radius: 50%;
   background-color: red;
   transition: all 0.2s;
-
-  &::after {
-    border: 2px solid red;
-    width: 15px;
-    height: 15px;
-    display: block;
-    // padding: 2px;
-    z-index: 100;
-    // content: "+";
+  &:hover {
+    box-shadow: none;
   }
 
-  // &:hover{
-  //   background-blend-mode: none;
-  //   border: 1px solid;
-  //   box-shadow: 0px 0px 5px black;
-  // }
-}
-
-.player1Token {
-  background: radial-gradient(yellow, black);
-}
-.player2Token {
-  background: radial-gradient(red, blue);
-}
-.player3Token {
-  background: radial-gradient(green, gold);
-}
-.player4Token {
-  background: radial-gradient(orange, violet);
+  &.player1Token {
+    background: radial-gradient(yellow, black);
+  }
+  &.player2Token {
+    background: radial-gradient(red, blue);
+  }
+  &.player3Token {
+    background: radial-gradient(green, gold);
+  }
+  &.player4Token {
+    background: radial-gradient(orange, violet);
+  }
 }

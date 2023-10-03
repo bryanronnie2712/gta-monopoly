@@ -63,7 +63,6 @@ const assetsList = [
     color: "blue",
     className: "ad",
   },
-
   { id: 11, src: ViceCityPolice, className: "ae" },
   { id: 12, src: northPointMall, type: "asset", cost: "10", className: "af" },
   { id: 13, src: rampageLeft, className: "ag" },
@@ -74,8 +73,7 @@ const assetsList = [
   { id: 18, src: rampageLeft, className: "al" },
   { id: 19, src: boatYardLeft, type: "asset", cost: "10", className: "am" },
   { id: 20, src: boatYardLeft, type: "asset", cost: "10", className: "an" },
-
-  { id: 21, src: "", className: "a" },
+  { id: 21, src: start, className: "a" },
   {
     id: 22,
     src: IceCreamFactoryTop,
@@ -104,7 +102,7 @@ const assetsList = [
   { id: 29, src: rampage, className: "i" },
   { id: 30, src: KaufmanCabsTop, type: "asset", cost: "10", className: "j" },
 
-  { id: 31, src: "", className: "k" },
+  { id: 31, src: start, className: "k" },
   { id: 32, src: elSwankoCasa, type: "asset", cost: "10", className: "l" },
   { id: 33, src: SunshineAutos, type: "asset", cost: "10", className: "m" },
   { id: 34, src: rampageLeft, className: "n" },
