@@ -1,3 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,700;1,300&display=swap");
+
+* {
+  font-family: "Nunito", Arial, sans-serif;
+  margin: 0;
+}
+
 .container {
   background-size: cover;
   object-fit: contain;
@@ -244,4 +251,111 @@ body,
   &.player4Token {
     background: radial-gradient(orange, violet);
   }
+}
+
+// Toast
+.Toastify__toast-theme--light {
+  background-color: aqua;
+}
+
+.form-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+  background: url("/images/assets/vc-bg.jpg");
+  background-size: cover;
+  background-color: #1a2303;
+  background-blend-mode: luminosity;
+
+  .createJoinForm {
+    background-color: white;
+    width: 360px;
+    border: 1px solid #2c2c2c;
+    border-radius: 5px;
+    align-self: center;
+    height: 300px;
+    &.create {
+      background-color: #c5ff6b;
+    }
+    &.join {
+      background-color: #a9ffff;
+    }
+  }
+
+  .form-inner {
+    padding: 5px 10px;
+  }
+}
+
+// Global
+.flex {
+  display: flex;
+  &.spc {
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+#create-tab-btn {
+  cursor: pointer;
+  float: left;
+  width: 50%;
+  background-color: #c5ff6b;
+  text-align: center;
+  font-weight: 600;
+  font-size: xx-large;
+  box-shadow: #747474 -2px -2px 2px inset;
+  border-radius: 5px 0 0 0;
+  &.checked {
+    background-color: #c5ff6b;
+    cursor: default;
+    box-shadow: #b1b1b1 0px -1px 0px inset;
+  }
+}
+
+#join-tab-btn {
+  cursor: pointer;
+  float: right;
+  width: 50%;
+  border-radius: 0 5px 0 0;
+  text-align: center;
+  background-color: #a9ffff;
+  font-weight: 600;
+  box-shadow: #747474 -2px -2px 2px inset;
+  font-size: xx-large;
+  &.checked {
+    background-color: #a9ffff;
+    box-shadow: #b1b1b1 0px -1px 0px inset;
+    cursor: default;
+  }
+}
+
+.join-form {
+  margin-top: 10px;
+  padding: 0 26%;
+
+  .form-options {
+    margin-top: 30px;
+  }
+}
+
+.create-form {
+  margin-top: 40px;
+  padding: 0 26%;
+
+  .form-options {
+    margin-top: 55px;
+  }
+}
+
+.playerNameInput,
+.roomIdInput {
+  margin-bottom: 10px;
+}
+
+.currentTabLabel {
+  text-align: center;
+  font-weight: 600;
+  margin: 45px 0;
 }

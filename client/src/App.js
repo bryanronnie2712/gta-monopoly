@@ -32,7 +32,21 @@ export default function App() {
   });
   const [currentTile, setCurrentTile] = useState();
 
-  console.log("==> ", playerMe);
+  const [display, setDisplay] = useState({
+    playerForm: true,
+  });
+
+  const [formTab, setFormTab] = useState("create");
+
+  console.log("playerMe ==> ", playerMe);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("Logs every minute");
+    }, 5000);
+
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+  }, []);
 
   useEffect(() => {
     setCurrentTile(
@@ -83,11 +97,6 @@ export default function App() {
       await new Promise((resolve) => {
         setTimeout(() => {
           let playerTokenPosition = tokenPos[playerNumber];
-
-          // playerTokenPosition.xPos +=
-          //   assetPositions[playerDetails[playerNumber].pos].x;
-          // playerTokenPosition.yPos +=
-          //   assetPositions[playerDetails[playerNumber].pos].y;
 
           let tempTokenPos = [...tokenPos];
           tempTokenPos[playerNumber] = playerTokenPosition;
@@ -153,17 +162,19 @@ export default function App() {
   const createRoom = () => {
     socket.emit("createRoom", {
       playerName: playerMe.playerName,
-      playerId: playerMe.id,
+      playerId: playerMe.playerName,
       playerMe,
     });
+    setDisplay({ ...display, playerForm: false });
   };
 
   const joinRoom = () => {
     socket.emit("joinRoom", {
       playerName: playerMe.playerName,
-      playerId: playerMe.id,
+      playerId: playerMe.playerName,
       roomId: playerMe.room,
     });
+    setDisplay({ ...display, playerForm: false });
   };
 
   useEffect(() => {
@@ -181,6 +192,12 @@ export default function App() {
       setPlayerDetails(data.updPlayerDetails);
     });
 
+    // rejoin
+    socket.on("rejoinRoomStatus", (data) => {
+      toast.success(`Rejoined ${data.roomId}!`);
+      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber });
+      setPlayerDetails(data.updPlayerDetails);
+    });
     // When a user joins a room -> other players
     socket.on("aNewPlayerHasJoined", (data) => {
       toast.success(`${data.newPlayerName} has joined your game!`);
@@ -193,26 +210,89 @@ export default function App() {
   return (
     <div>
       <ToastContainer />
-      {true && (
-        <div>
-          <h1>Create or Join Game</h1>
-          Player Name:
-          <input
-            required={true}
-            onChange={(e) =>
-              setPlayerMe({ ...playerMe, playerName: e.target.value })
+      {display.playerForm && (
+        <div className="form-overlay">
+          <div
+            className={
+              formTab == "join"
+                ? "createJoinForm join"
+                : "createJoinForm create"
             }
-          ></input>
-          Room ID:
-          <input
-            required={true}
-            onChange={(e) => setPlayerMe({ ...playerMe, room: e.target.value })}
-          ></input>
-          <button onClick={joinRoom}>Join</button>
-          <button onClick={createRoom}>Create</button>
+          >
+            <div>
+              <div
+                id="create-tab-btn"
+                className={
+                  formTab == "create"
+                    ? "create-tab-btn checked"
+                    : "create-tab-btn"
+                }
+                onClick={() => setFormTab("create")}
+              >
+                Create
+              </div>
+              <div
+                id="join-tab-btn"
+                onClick={() => setFormTab("join")}
+                className={
+                  formTab == "join" ? "join-tab-btn checked" : "join-tab-btn "
+                }
+              >
+                Join
+              </div>
+            </div>
+
+            <div className="form-inner">
+              <div className="currentTabLabel">
+                {formTab == "create" ? "Create new room" : "Join Room"}
+              </div>
+              {formTab == "create" ? (
+                <div className="create-form">
+                  Player Name:
+                  <div className="playerNameInput">
+                    <input
+                      required={true}
+                      onChange={(e) =>
+                        setPlayerMe({ ...playerMe, playerName: e.target.value })
+                      }
+                    ></input>
+                  </div>
+                  <div className="form-options flex spc">
+                    <button onClick={createRoom}>Create</button>
+                  </div>
+                </div>
+              ) : (
+                <div className="join-form">
+                  Player Name:
+                  <div className="playerNameInput">
+                    <input
+                      required={true}
+                      onChange={(e) =>
+                        setPlayerMe({ ...playerMe, playerName: e.target.value })
+                      }
+                    ></input>
+                  </div>
+                  <div>
+                    Room ID:
+                    <div className="roomIdInput">
+                      <input
+                        required={true}
+                        onChange={(e) =>
+                          setPlayerMe({ ...playerMe, room: e.target.value })
+                        }
+                      ></input>
+                    </div>
+                  </div>
+                  <div className="form-options flex spc">
+                    <button onClick={joinRoom}>Join</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
-      {false && (
+      {!display.playerForm && (
         <div className="container">
           {/* Looping through the assets list imported from index.js -- Reduces 355 lines of code */}
           {assetsList.map((asset) => {
@@ -259,9 +339,7 @@ export default function App() {
             {playerDetails.map((mp, index) => (
               <>
                 Player {mp.id} - {mp.pos} - {mp.money} -{" "}
-                {mp.assets.map((a) => (
-                  <>a</>
-                ))}
+                {JSON.stringify(mp.assets)}
                 <br />
               </>
             ))}
@@ -272,10 +350,12 @@ export default function App() {
             ) : (
               <p style={{ color: "blue" }}>
                 {playerDetails[currentTurn] != null
-                  ? "Current turn -" + playerDetails[currentTurn].playerName
+                  ? "Current turn -" + playerDetails[currentTurn].name
                   : ""}
               </p>
             )}
+            {JSON.stringify(playerDetails)}
+            {JSON.stringify(currentTurn)}
             {/* {playerDetails.map((pd) => {
             if (pd.id == playerMe.id) return playerMe.playerName;
             else return playerDetails[currentTurn].playerName;

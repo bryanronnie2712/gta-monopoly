@@ -45,6 +45,14 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on(
+    "joinRoom",
+    (data) => {
+      console.log("connStatus", data);
+    },
+    5000,
+  );
+
   // Joining a room
   socket.on("joinRoom", (data) => {
     // data = {roomId: String, playerName: String, playerId: String}
@@ -52,32 +60,52 @@ io.on("connection", (socket) => {
     const roomIdAvailable = Object.keys(currentGames).includes(data.roomId);
     const roomSize = currentGames[data.roomId]?.players?.length;
     const roomNotFull = roomSize < 4;
+
+    const playerIdExists = currentGames[data.roomId]?.players
+      .map((player) => {
+        return player.playerId;
+      })
+      .indexOf(data.playerName);
+    console.log("playerIdExists", playerIdExists);
     if (roomIdAvailable) {
       if (roomNotFull) {
-        // Update player details
-        currentGames[data.roomId].players.push({
-          playerNumber: roomSize,
-          playerId: data.playerId,
-          name: data.playerName,
-          pos: 0,
-          money: 1500,
-          assets: [],
-        });
-        // Joining this room
-        socket.join(data.roomId);
-        // Reply to joiner
-        socket.emit("joinRoomStatus", {
-          updPlayerDetails: currentGames[data.roomId].players,
-          playerNumber: roomSize,
-          roomId: data.roomId,
-          msg: "joined",
-        });
-        // Broadcast to roomId
-        socket.broadcast.emit("aNewPlayerHasJoined", {
-          updPlayerDetails: currentGames[data.roomId].players,
-          newPlayerName: data.playerName,
-          msg: "joined",
-        });
+        console.log("player already in room");
+        if (playerIdExists >= 0) {
+          // Joining this room
+          socket.join(data.roomId);
+          // Reply to joiner
+          socket.emit("rejoinRoomStatus", {
+            updPlayerDetails: currentGames[data.roomId].players,
+            playerNumber: roomSize,
+            roomId: data.roomId,
+            msg: "rejoined",
+          });
+        } else {
+          // Update player details
+          currentGames[data.roomId].players.push({
+            playerNumber: roomSize,
+            playerId: data.playerId,
+            name: data.playerName,
+            pos: 0,
+            money: 1500,
+            assets: [],
+          });
+          // Joining this room
+          socket.join(data.roomId);
+          // Reply to joiner
+          socket.emit("joinRoomStatus", {
+            updPlayerDetails: currentGames[data.roomId].players,
+            playerNumber: roomSize,
+            roomId: data.roomId,
+            msg: "joined",
+          });
+          // Broadcast to roomId
+          socket.broadcast.emit("aNewPlayerHasJoined", {
+            updPlayerDetails: currentGames[data.roomId].players,
+            newPlayerName: data.playerName,
+            msg: "joined",
+          });
+        }
       } else {
         // Room is full
         // Disconnect from socket
@@ -87,6 +115,10 @@ io.on("connection", (socket) => {
           msg: "full",
         });
       }
+      console.log(
+        "Players ==> ",
+        currentGames[data.roomId]?.players.map((player) => player.playerId),
+      );
     } else {
       console.log("Room Id does not exist");
     }
