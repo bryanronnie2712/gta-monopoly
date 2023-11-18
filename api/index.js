@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
           // Reply to joiner
           socket.emit("rejoinRoomStatus", {
             updPlayerDetails: currentGames[data.roomId].players,
-            playerNumber: roomSize,
+            playerNumber: currentGames[data.roomId].players.playerNumber,
             roomId: data.roomId,
             msg: "rejoined",
           });
