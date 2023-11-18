@@ -8,7 +8,8 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://x6yjll-3000.csb.app",
+    // origin: "https://x6yjll-3000.csb.app",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });

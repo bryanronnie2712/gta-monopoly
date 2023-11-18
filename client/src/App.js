@@ -4,10 +4,9 @@ import { assetsList } from "./images/assets/index.js";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const socket = io.connect("https://x6yjll-4000.csb.app");
+const socket = io.connect("http://localhost:4000");
 
 export default function App() {
-  const [room, setRoom] = useState("12345");
   const [tokenPos, setTokenPos] = useState([
     { id: 0, xPos: 0, yPos: 0 }, // player 1
     { id: 1, xPos: 0, yPos: 0 }, // player 2
@@ -207,6 +206,9 @@ export default function App() {
   }, [socket]);
   // ----------------------
 
+console.log("currentTurn",currentTurn)
+
+
   return (
     <div>
       <ToastContainer />
@@ -330,7 +332,7 @@ export default function App() {
               }
             ></input>
             <button onClick={joinRoom}>joinRoom</button> */}
-            <button onClick={() => rollDice(currentTurn)}>Roll</button>
+            {playerMe.playerName == currentTurn && <button onClick={() => rollDice(currentTurn)}>Roll</button>}
             <button onClick={nextPlayerTurn}>NextPlayerTurn</button>
             {currentTile}
             Total Players - {playerDetails.length} <br />
@@ -343,7 +345,7 @@ export default function App() {
                 <br />
               </>
             ))}
-            {currentTurn == playerMe.playerNumber ? (
+            {currentTurn == playerMe?.playerNumber ? (
               <p style={{ color: "red" }}>
                 Current turn -{playerMe.playerName}
               </p>
