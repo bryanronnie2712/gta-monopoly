@@ -4,7 +4,7 @@ import { assetsList } from "./images/assets/index.js";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import copy from 'copy-to-clipboard';
+import copy from "copy-to-clipboard";
 
 const socket = io.connect("http://localhost:4000");
 
@@ -23,7 +23,6 @@ export default function App() {
     id: Math.floor(Math.random() * 10000),
     room: "",
   });
-
 
   const [currentTurn, setCurrentTurn] = useState(0);
   const [trailCurrentTile, setTrailCurrentTile] = useState(0);
@@ -59,13 +58,13 @@ export default function App() {
         <div
           style={{
             transform: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(
-              trailCurrentTile,
+              trailCurrentTile
             )
               ? ""
               : [11, 12, 13, 14, 15, 16, 17, 18, 19].includes(trailCurrentTile)
               ? "rotate(-90deg)"
               : [20, 21, 22, 23, 24, 25, 26, 27, 28, 29].includes(
-                  trailCurrentTile,
+                  trailCurrentTile
                 )
               ? "rotate(180deg)"
               : "rotate(90deg)",
@@ -83,7 +82,7 @@ export default function App() {
             alt={assetsList[trailCurrentTile]}
           />
         </div>
-      </div>,
+      </div>
     );
   }, [trailCurrentTile, currentTurn]);
 
@@ -141,7 +140,10 @@ export default function App() {
 
   const nextPlayerTurn = () => {
     // setCurrentTurn((currentTurn + 1) % playerDetails.length);
-    console.log("nextPlayerTurn--->",{currentTurn: currentTurn,roomId: playerMe.room})
+    console.log("nextPlayerTurn--->", {
+      currentTurn: currentTurn,
+      roomId: playerMe.room,
+    });
     socket.emit("nextTurn", {
       currentTurn: currentTurn,
       roomId: playerMe.room,
@@ -157,7 +159,7 @@ export default function App() {
     tempPlayerDetails[playerNumber].money -=
       assetsList[playerDetails[playerNumber].pos].cost;
     tempPlayerDetails[playerNumber].assets.push(
-      playerDetails[playerNumber].pos,
+      playerDetails[playerNumber].pos
     );
     console.log("tempPlayerDetails-->", tempPlayerDetails);
     setPlayerDetails(tempPlayerDetails);
@@ -189,23 +191,34 @@ export default function App() {
   useEffect(() => {
     // Create Room
     socket.on("createRoomStatus", (data) => {
-
       toast.success("Room " + data.roomId + " created!");
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber, room:data.roomId });
+      setPlayerMe({
+        ...playerMe,
+        playerNumber: data.playerNumber,
+        room: data.roomId,
+      });
       setPlayerDetails(data.updPlayerDetails);
     });
 
     // Join Room
     socket.on("joinRoomStatus", (data) => {
       toast.success(`Joined ${data.roomId}!`);
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber,room:data.roomId });
+      setPlayerMe({
+        ...playerMe,
+        playerNumber: data.playerNumber,
+        room: data.roomId,
+      });
       setPlayerDetails(data.updPlayerDetails);
     });
 
     // rejoin
     socket.on("rejoinRoomStatus", (data) => {
       toast.success(`Rejoined ${data.roomId}!`);
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber, room:data.roomId });
+      setPlayerMe({
+        ...playerMe,
+        playerNumber: data.playerNumber,
+        room: data.roomId,
+      });
       setPlayerDetails(data.updPlayerDetails);
     });
     // When a user joins a room -> other players
@@ -217,15 +230,12 @@ export default function App() {
 
     // next turn reply function to all players
     socket.on("nextTurnReply", (data) => {
-      console.log("data.updPlayerDetails", data.updPlayerDetails)
+      console.log("data.updPlayerDetails", data.updPlayerDetails);
       setCurrentTurn(data.currentTurn);
-      setPlayerDetails(data.updPlayerDetails)
-    })
-
+      setPlayerDetails(data.updPlayerDetails);
+    });
   }, [socket]);
   // ----------------------
-
-
 
   return (
     <div>
@@ -350,10 +360,10 @@ export default function App() {
               }
             ></input>
             <button onClick={joinRoom}>joinRoom</button> */}
-            {playerMe.playerName == currentTurn && <button onClick={() => rollDice(currentTurn)}>Roll</button>}
+            {playerMe.playerName == currentTurn && (
+              <button onClick={() => rollDice(currentTurn)}>Roll</button>
+            )}
             <button onClick={nextPlayerTurn}>NextPlayerTurn</button>
-            
-            
             {currentTile}
             Total Players - {playerDetails.length} <br />
             Player - Pos - Money - Assets
@@ -365,25 +375,29 @@ export default function App() {
                 <br />
               </>
             ))}
-            <span className="copy-room-id" onClick={() => {copy(playerMe.room)}}>
+            <span
+              className="copy-room-id"
+              onClick={() => {
+                copy(playerMe.room);
+              }}
+            >
               Room id - {playerMe.room}
-              </span> 
-              <br/>
+            </span>
+            <br />
             {/* Current turn - {currentTurn} */}
             {/* {currentTurn == playerMe?.playerNumber  ? (
               <p style={{ color: "red" }}>
                 Current turn -{playerMe.playerName}
               </p>
             ) : ( */}
-
-
-              <p style={{ color: "blue" }}>
-                { currentTurn == playerMe?.playerNumber
-                  ? `Current turn [${currentTurn}] -  You`
-                  : "Current turn [" + currentTurn + '] - ' + playerDetails[currentTurn].name}
-              </p>
-
-
+            <p style={{ color: "blue" }}>
+              {currentTurn == playerMe?.playerNumber
+                ? `Current turn [${currentTurn}] -  You`
+                : "Current turn [" +
+                  currentTurn +
+                  "] - " +
+                  playerDetails[currentTurn].name}
+            </p>
             {/* )} */}
             {JSON.stringify(playerDetails)}
             {/* {playerDetails.map((pd) => {

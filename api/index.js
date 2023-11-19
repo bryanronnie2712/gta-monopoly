@@ -31,9 +31,9 @@ io.on("connection", (socket) => {
           pos: 0,
           money: 1500,
           assets: [],
-        },    
+        },
       ],
-      currentTurn: 0
+      currentTurn: 0,
     };
     console.log("currentGames ==>", currentGames, data);
     // Creating and Joining this room
@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
     (data) => {
       console.log("connStatus", data);
     },
-    5000,
+    5000
   );
 
   // Joining a room
@@ -119,51 +119,46 @@ io.on("connection", (socket) => {
       }
       console.log(
         "Players ==> ",
-        currentGames[data.roomId]?.players.map((player) => player.playerId),
+        currentGames[data.roomId]?.players.map((player) => player.playerId)
       );
     } else {
       console.log("Room Id does not exist");
     }
   });
 
+  //   // sending to sender-client only
+  // socket.emit('message', "this is a test");
 
+  // // sending to all clients, include sender
+  // io.emit('message', "this is a test");
 
+  // // sending to all clients except sender
+  // socket.broadcast.emit('message', "this is a test");
 
-//   // sending to sender-client only
-// socket.emit('message', "this is a test");
+  // // sending to all clients in 'game' room(channel) except sender
+  // socket.broadcast.to('game').emit('message', 'nice game');
 
-// // sending to all clients, include sender
-// io.emit('message', "this is a test");
+  // // sending to all clients in 'game' room(channel), include sender
+  // io.in('game').emit('message', 'cool game');
 
-// // sending to all clients except sender
-// socket.broadcast.emit('message', "this is a test");
+  // // sending to sender client, only if they are in 'game' room(channel)
+  // socket.to('game').emit('message', 'enjoy the game');
 
-// // sending to all clients in 'game' room(channel) except sender
-// socket.broadcast.to('game').emit('message', 'nice game');
+  // // sending to all clients in namespace 'myNamespace', include sender
+  // io.of('myNamespace').emit('message', 'gg');
 
-// // sending to all clients in 'game' room(channel), include sender
-// io.in('game').emit('message', 'cool game');
+  // // sending to individual socketid
+  // socket.broadcast.to(socketid).emit('message', 'for your eyes only');
 
-// // sending to sender client, only if they are in 'game' room(channel)
-// socket.to('game').emit('message', 'enjoy the game');
+  // // list socketid
+  // for (var socketid in io.sockets.sockets) {}
+  //  OR
+  // Object.keys(io.sockets.sockets).forEach((socketid) => {});
 
-// // sending to all clients in namespace 'myNamespace', include sender
-// io.of('myNamespace').emit('message', 'gg');
-
-// // sending to individual socketid
-// socket.broadcast.to(socketid).emit('message', 'for your eyes only');
-
-// // list socketid
-// for (var socketid in io.sockets.sockets) {}
-//  OR
-// Object.keys(io.sockets.sockets).forEach((socketid) => {});
-
-
-
-// Next turn
+  // Next turn
   socket.on("nextTurn", (data) => {
     const roomSize = currentGames[data.roomId]?.players?.length;
-    console.log("data.roomId",data.roomId)
+    console.log("data.roomId", data.roomId);
     // get current Turn from frontend, add by 1
     // currentGames[data.roomId]["currentTurn"] = (data.currentTurn + 1) % roomSize;
 
@@ -171,11 +166,11 @@ io.on("connection", (socket) => {
     //   updPlayerDetails: currentGames[data.roomId]?.players,
     //   currentTurn : (data.currentTurn + 1) % roomSize
     // });
-    
-    console.log('nextTurn- data-->', data)
+
+    console.log("nextTurn- data-->", data);
 
     // Broadcast to everyone in the room, including the sender
-    
+
     // io.in(data.roomid).emit('nextTurnReply', {
     //   updPlayerDetails: currentGames[data.roomId]?.players,
     //   currentTurn : (data.currentTurn + 1) % roomSize
@@ -183,65 +178,24 @@ io.on("connection", (socket) => {
 
     socket.emit("nextTurnReply", {
       updPlayerDetails: currentGames[data.roomId]?.players,
-      currentTurn : (data.currentTurn + 1) % roomSize
+      currentTurn: (data.currentTurn + 1) % roomSize,
     });
-
 
     socket.broadcast.emit("nextTurnReply", {
       updPlayerDetails: currentGames[data.roomId]?.players,
-      currentTurn : (data.currentTurn + 1) % roomSize
+      currentTurn: (data.currentTurn + 1) % roomSize,
     });
-
 
     // socket.broadcast("nextTurnReply", {
     //   updPlayerDetails: currentGames[data.roomId]?.players,
     //   currentTurn : (data.currentTurn + 1) % roomSize
     // });
   });
-
 });
-
-
-
-
-
 
 // Update player position on dice rolling
 
 // Update player details on actions{buy, sell, }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 server.listen(4000, () => {
   console.log("Server is running on port 4000");
