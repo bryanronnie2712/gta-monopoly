@@ -217,9 +217,9 @@ export default function App() {
 
     // next turn reply function to all players
     socket.on("nextTurnReply", (data) => {
-      console.log("data.currentTurn", data.currentTurn, playerMe?.playerNumber)
+      console.log("data.updPlayerDetails", data.updPlayerDetails)
       setCurrentTurn(data.currentTurn);
-      // setPlayerDetails(data.updPlayerDetails)
+      setPlayerDetails(data.updPlayerDetails)
     })
 
   }, [socket]);
@@ -369,18 +369,22 @@ export default function App() {
               Room id - {playerMe.room}
               </span> 
               <br/>
-            Current turn - {currentTurn}
-            {currentTurn == playerMe?.playerNumber  ? (
+            {/* Current turn - {currentTurn} */}
+            {/* {currentTurn == playerMe?.playerNumber  ? (
               <p style={{ color: "red" }}>
                 Current turn -{playerMe.playerName}
               </p>
-            ) : (
+            ) : ( */}
+
+
               <p style={{ color: "blue" }}>
-                {playerDetails[currentTurn] != null
-                  ? "Current turn - You" 
-                  : ""}
+                { currentTurn == playerMe?.playerNumber
+                  ? `Current turn [${currentTurn}] -  You`
+                  : "Current turn [" + currentTurn + '] - ' + playerDetails[currentTurn].name}
               </p>
-            )}
+
+
+            {/* )} */}
             {JSON.stringify(playerDetails)}
             {/* {playerDetails.map((pd) => {
             if (pd.id == playerMe.id) return playerMe.playerName;
