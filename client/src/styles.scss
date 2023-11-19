@@ -11,8 +11,7 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
   grid-template-rows: 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.5fr;
-  gap: none;
-
+  width: 99.5%;
   grid-auto-flow: row;
   grid-template-areas:
     "a b c d e f g h i j k"
@@ -358,4 +357,33 @@ body,
   text-align: center;
   font-weight: 600;
   margin: 45px 0;
+}
+
+.current-tile{
+  box-shadow: none;
+    border: none;
+  &:hover{
+    box-shadow: none;
+    border: none;
+  }
+
+  div,img{
+    box-shadow: none;
+      border: none;
+    &:hover{
+      box-shadow: none;
+      border: none;
+    }
+  }
+}
+
+
+.copy-room-id{
+  border-radius: 2px;
+  margin: 2px;
+  padding: 1px 3px;
+  &:hover{
+    box-shadow: 1px 1px 1px grey;
+    cursor: pointer;
+  }
 }

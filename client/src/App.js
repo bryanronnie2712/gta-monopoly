@@ -4,6 +4,8 @@ import { assetsList } from "./images/assets/index.js";
 import io from "socket.io-client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import copy from 'copy-to-clipboard';
+
 const socket = io.connect("http://localhost:4000");
 
 export default function App() {
@@ -21,6 +23,7 @@ export default function App() {
     id: Math.floor(Math.random() * 10000),
     room: "",
   });
+
 
   const [currentTurn, setCurrentTurn] = useState(0);
   const [trailCurrentTile, setTrailCurrentTile] = useState(0);
@@ -49,7 +52,7 @@ export default function App() {
 
   useEffect(() => {
     setCurrentTile(
-      <div style={{}}>
+      <div className="current-tile">
         <span>
           {trailCurrentTile}...........player{currentTurn + 1}
         </span>
@@ -137,7 +140,12 @@ export default function App() {
   };
 
   const nextPlayerTurn = () => {
-    setCurrentTurn((currentTurn + 1) % playerDetails.length);
+    // setCurrentTurn((currentTurn + 1) % playerDetails.length);
+    console.log("nextPlayerTurn--->",{currentTurn: currentTurn,roomId: playerMe.room})
+    socket.emit("nextTurn", {
+      currentTurn: currentTurn,
+      roomId: playerMe.room,
+    });
   };
 
   console.log("playerDetails --> ", playerDetails);
@@ -176,37 +184,47 @@ export default function App() {
     setDisplay({ ...display, playerForm: false });
   };
 
+  // const div = <span style={{color: 'red'}}>ASE</span>
+
   useEffect(() => {
     // Create Room
     socket.on("createRoomStatus", (data) => {
-      toast.success(`Room ${data.roomId} created!`);
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber });
+
+      toast.success("Room " + data.roomId + " created!");
+      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber, room:data.roomId });
       setPlayerDetails(data.updPlayerDetails);
     });
 
     // Join Room
     socket.on("joinRoomStatus", (data) => {
       toast.success(`Joined ${data.roomId}!`);
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber });
+      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber,room:data.roomId });
       setPlayerDetails(data.updPlayerDetails);
     });
 
     // rejoin
     socket.on("rejoinRoomStatus", (data) => {
       toast.success(`Rejoined ${data.roomId}!`);
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber });
+      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber, room:data.roomId });
       setPlayerDetails(data.updPlayerDetails);
     });
     // When a user joins a room -> other players
     socket.on("aNewPlayerHasJoined", (data) => {
       toast.success(`${data.newPlayerName} has joined your game!`);
-      setPlayerMe({ ...playerMe, playerNumber: data.playerNumber });
+      // setPlayerMe({ ...playerMe, playerNumber: data.playerNumber });
       setPlayerDetails(data.updPlayerDetails);
     });
+
+    // next turn reply function to all players
+    socket.on("nextTurnReply", (data) => {
+      console.log("data.currentTurn", data.currentTurn, playerMe?.playerNumber)
+      setCurrentTurn(data.currentTurn);
+      // setPlayerDetails(data.updPlayerDetails)
+    })
+
   }, [socket]);
   // ----------------------
 
-console.log("currentTurn",currentTurn)
 
 
   return (
@@ -311,7 +329,7 @@ console.log("currentTurn",currentTurn)
           })}
 
           {/* Player Tokens */}
-          {tokenPos.map((tp) => {
+          {/* {tokenPos.map((tp) => {
             if (tp.id == currentTurn)
               return (
                 <div
@@ -321,7 +339,7 @@ console.log("currentTurn",currentTurn)
                   }}
                 ></div>
               );
-          })}
+          })} */}
           {/* ------------- */}
 
           <div className="ao">
@@ -334,6 +352,8 @@ console.log("currentTurn",currentTurn)
             <button onClick={joinRoom}>joinRoom</button> */}
             {playerMe.playerName == currentTurn && <button onClick={() => rollDice(currentTurn)}>Roll</button>}
             <button onClick={nextPlayerTurn}>NextPlayerTurn</button>
+            
+            
             {currentTile}
             Total Players - {playerDetails.length} <br />
             Player - Pos - Money - Assets
@@ -345,19 +365,23 @@ console.log("currentTurn",currentTurn)
                 <br />
               </>
             ))}
-            {currentTurn == playerMe?.playerNumber ? (
+            <span className="copy-room-id" onClick={() => {copy(playerMe.room)}}>
+              Room id - {playerMe.room}
+              </span> 
+              <br/>
+            Current turn - {currentTurn}
+            {currentTurn == playerMe?.playerNumber  ? (
               <p style={{ color: "red" }}>
                 Current turn -{playerMe.playerName}
               </p>
             ) : (
               <p style={{ color: "blue" }}>
                 {playerDetails[currentTurn] != null
-                  ? "Current turn -" + playerDetails[currentTurn].name
+                  ? "Current turn - You" 
                   : ""}
               </p>
             )}
             {JSON.stringify(playerDetails)}
-            {JSON.stringify(currentTurn)}
             {/* {playerDetails.map((pd) => {
             if (pd.id == playerMe.id) return playerMe.playerName;
             else return playerDetails[currentTurn].playerName;

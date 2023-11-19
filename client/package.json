@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "copy-to-clipboard": "^3.3.3",
     "css-loader": "^6.8.1",
     "loader-utils": "3.2.1",
     "postcss-loader": "^7.3.3",
