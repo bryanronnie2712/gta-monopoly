@@ -359,31 +359,69 @@ body,
   margin: 45px 0;
 }
 
-.current-tile{
+.current-tile {
   box-shadow: none;
-    border: none;
-  &:hover{
+  border: none;
+  &:hover {
     box-shadow: none;
     border: none;
   }
 
-  div,img{
+  div,
+  img {
     box-shadow: none;
-      border: none;
-    &:hover{
+    border: none;
+    &:hover {
       box-shadow: none;
       border: none;
     }
   }
 }
 
+.player-controls {
+  display: flex;
+  gap: 10px;
+  border: none;
+  padding: 10px;
 
-.copy-room-id{
-  border-radius: 2px;
-  margin: 2px;
-  padding: 1px 3px;
-  &:hover{
-    box-shadow: 1px 1px 1px grey;
-    cursor: pointer;
+  &:hover {
+    box-shadow: none;
+  }
+
+  .btn {
+    border: none;
+    padding: 3px 7px;
+    border-radius: 5px;
+
+    &:not(:disabled):hover {
+      color: orange;
+      background-color: black;
+      transition: all 0.1s;
+    }
+
+    &:disabled:hover {
+      box-shadow: none;
+    }
+  }
+}
+
+.playerTable {
+  border: 1px solid black;
+  border-collapse: collapse;
+
+  &:hover {
+    box-shadow: none;
+  }
+
+  td,
+  th,
+  tr {
+    padding: 3px 5px;
+    text-align: center;
+    border: 1px solid black;
+
+    &:hover {
+      box-shadow: none;
+    }
   }
 }

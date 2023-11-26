@@ -52,9 +52,7 @@ export default function App() {
   useEffect(() => {
     setCurrentTile(
       <div className="current-tile">
-        <span>
-          {trailCurrentTile}...........player{currentTurn + 1}
-        </span>
+        <span>TrailCurrentTile - {trailCurrentTile}</span>
         <div
           style={{
             transform: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].includes(
@@ -135,7 +133,11 @@ export default function App() {
   const rollDice = (playerNumber) => {
     const diceVal = Math.floor(Math.random() * 12) + 1;
     handleTokenPos(playerNumber, diceVal);
-    // handleTokenPos(playerNumber, 1); // For testing
+
+    // socket.emit("diceRollNumber", {
+    //   diceVal: diceVal,
+    //   playerNumber: playerNumber,
+    // });
   };
 
   const nextPlayerTurn = () => {
@@ -234,6 +236,12 @@ export default function App() {
       setCurrentTurn(data.currentTurn);
       setPlayerDetails(data.updPlayerDetails);
     });
+
+    // get current Tile function to other players
+    // socket.on("diceRollBroadcast", (data) => {
+    //   setCurrentTurn(data.currentTurn);
+    //   setPlayerDetails(data.updPlayerDetails);
+    // });
   }, [socket]);
   // ----------------------
 
@@ -353,62 +361,77 @@ export default function App() {
           {/* ------------- */}
 
           <div className="ao">
-            {/* <input
-              required={true}
-              onChange={(e) =>
-                setPlayerMe({ ...playerMe, playerName: e.target.value })
-              }
-            ></input>
-            <button onClick={joinRoom}>joinRoom</button> */}
-            {playerMe.playerName == currentTurn && (
-              <button onClick={() => rollDice(currentTurn)}>Roll</button>
-            )}
-            <button onClick={nextPlayerTurn}>NextPlayerTurn</button>
+            <div className="player-controls">
+              <button
+                className="btn"
+                onClick={() => {
+                  copy(playerMe.room);
+                }}
+              >
+                Room id - {playerMe.room}
+              </button>
+
+              <button
+                className="btn"
+                disabled={playerMe.playerName == currentTurn}
+                onClick={() => rollDice(currentTurn)}
+              >
+                Roll
+              </button>
+
+              <button className="btn" onClick={nextPlayerTurn}>
+                Next Player Turn
+              </button>
+
+              <button
+                className="btn"
+                disabled={!optionDetails.buy}
+                onClick={() => buyAsset(currentTurn)}
+              >
+                Buy
+              </button>
+            </div>
             {currentTile}
             Total Players - {playerDetails.length} <br />
-            Player - Pos - Money - Assets
-            <br />
-            {playerDetails.map((mp, index) => (
-              <>
-                Player {mp.id} - {mp.pos} - {mp.money} -{" "}
-                {JSON.stringify(mp.assets)}
-                <br />
-              </>
-            ))}
-            <span
-              className="copy-room-id"
-              onClick={() => {
-                copy(playerMe.room);
-              }}
-            >
-              Room id - {playerMe.room}
-            </span>
-            <br />
-            {/* Current turn - {currentTurn} */}
-            {/* {currentTurn == playerMe?.playerNumber  ? (
-              <p style={{ color: "red" }}>
-                Current turn -{playerMe.playerName}
-              </p>
-            ) : ( */}
+            {playerDetails.length > 0 && (
+              <table className="playerTable">
+                <tr>
+                  {Object.keys(playerDetails[0]).map((m) => (
+                    <th>{m}</th>
+                  ))}
+                </tr>
+                {playerDetails.map((mp) => (
+                  <tr>
+                    {Object.values(mp).map((m) =>
+                      currentTurn == mp?.playerNumber ? (
+                        <td
+                          style={{
+                            color: "black",
+                            textShadow: "1px 0px 1px black",
+                            background: "#00cf23",
+                          }}
+                        >
+                          {m}
+                        </td>
+                      ) : (
+                        <td>{m}</td>
+                      )
+                    )}
+                  </tr>
+                ))}
+              </table>
+            )}
+            {/* ===Current Turn======================= */}
             <p style={{ color: "blue" }}>
               {currentTurn == playerMe?.playerNumber
                 ? `Current turn [${currentTurn}] -  You`
                 : "Current turn [" +
                   currentTurn +
                   "] - " +
-                  playerDetails[currentTurn].name}
+                  playerDetails[currentTurn]?.name}
             </p>
-            {/* )} */}
-            {JSON.stringify(playerDetails)}
-            {/* {playerDetails.map((pd) => {
-            if (pd.id == playerMe.id) return playerMe.playerName;
-            else return playerDetails[currentTurn].playerName;
-          })} */}
-            {optionDetails.buy ? (
-              <button onClick={() => buyAsset(currentTurn)}>Buy</button>
-            ) : (
-              ""
-            )}
+            {/* ------------------------------------- */}
+            {/* {JSON.stringify(playerDetails)} */}
           </div>
         </div>
       )}
